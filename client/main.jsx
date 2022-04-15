@@ -3,19 +3,29 @@ const helper = require('./helper.js');
 
 
 // return "html" of post maker form
-//const PostForm = (props) => {
-//    
-//}
-
+const PostForm = (props) => {
+    return (
+        <form id="postForm"
+            name="postForm"
+            onSubmit={handlePost}
+            action="/makePost"
+            method="POST"
+            className="input-group vertical"
+        >
+            <label htmlFor="mainBody">Make a Post! </label>
+            <textarea id="mainBody" name="mainBody" placeholder="Type something here..." />
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input type="submit" value="Post" />
+        </form>
+    );
+}
 // construct and send post
 const handlePost = (e) => {
     e.preventDefault();
     helper.hideError();
 
     const mainBody = e.target.querySelector('#mainBody').value;
-    //const age = e.target.querySelector('#domoAge').value;
-    //const teeth = e.target.querySelector('#domoTeeth').value;
-    //const _csrf = e.target.querySelector('#_csrf').value;
+    const _csrf = e.target.querySelector('#_csrf').value;
 
     // check if data is good
     if(!mainBody) {
@@ -29,6 +39,7 @@ const handlePost = (e) => {
     return false;
 }
 
+// list all posts passed in props
 const PostList = (props) => {
     if(props.posts.length === 0) {
         return (
@@ -38,11 +49,11 @@ const PostList = (props) => {
         );
     }
 
-    const postNodes = props.posts.map(post => {
+    const postNodes = props.posts.reverse().map(post => {
         return (
-            <div key={post._id} className="post">
+            <div key={post._id} className="post card">
                 <h3> From: {post.username} </h3>
-                <p> Age: {post.age} </p>
+                <p> {post.mainBody} </p>
             </div>
         );
     });
@@ -69,10 +80,13 @@ const init = async () => {
     const response = await fetch('/getToken');
     const data = await response.json();
     // hook up event listeners (windows to buttons)
+    
     ReactDOM.render(
-        <PostList posts={[]} />,
-        document.getElementById('content')
+        <PostForm csrf={data.csrfToken} />,
+        document.getElementById('makePost')
     );
+
+    loadPostsFromServer();
     // render postmaker
     // render posts
     // render ads

@@ -8,6 +8,7 @@ const mid = require('./middleware');
 
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
+  app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
 
   app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
@@ -17,7 +18,7 @@ const router = (app) => {
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
   app.get('/main', mid.requiresLogin, controllers.Post.mainPage);
-  app.post('/main', mid.requiresLogin, controllers.Post.makePost);
+  app.post('/makePost', mid.requiresLogin, controllers.Post.makePost);
 
   app.get('/getPremium', mid.requiresLogin, controllers.Account.getPremium);
   app.post('/setPremium', mid.requiresLogin, controllers.Account.setPremium);
