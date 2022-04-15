@@ -63,7 +63,7 @@ AccountSchema.statics.updatePremium = async (_id, updatedPremium, callback) => {
   try {
     const filter = { _id };
     const update = { premium: updatedPremium };
-    const doc = await AccountModel.findOneAndUpdate(filter, update, { new: true }).exec();
+    const doc = await AccountModel.updateOne(filter, update);
     if (!doc) {
       return callback();
     }
