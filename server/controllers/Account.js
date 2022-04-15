@@ -77,9 +77,9 @@ const setPremium = (req, res) => {
       return res.status(401).json({ error: 'Something went wrong...' });
     }
 
-    // set session account and redirect to main page
+    // set session account
     req.session.account.premium = req.body.premium;
-    return res.json({ redirect: '/main' });
+    return res.json({ premium: req.body.premium });
   });
 };
 

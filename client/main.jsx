@@ -1,7 +1,6 @@
 // This file handles the main page with react
 const helper = require('./helper.js');
 
-
 // return "html" of post maker form
 const PostForm = (props) => {
     return (
@@ -37,6 +36,74 @@ const handlePost = (e) => {
     helper.sendPost(e.target.action, {mainBody, _csrf}, loadPostsFromServer);
 
     return false;
+}
+
+const SetPremium = async (e, value) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const isPremium = value;
+    const _csrf = e.target.querySelector('#_csrf').value;
+    
+    helper.sendPost(e.target.action, {isPremium, _csrf}, LoadAds);
+
+    // re-render premium stuff
+    LoadAds();
+
+    return false;
+}
+
+const Ads = (props) => {
+    if(props.premium === "false") return (
+        <div id="ads" className="adBox">
+            <img src="/assets/img/ad1.jpg" alt="ad" className="ad" />
+        </div>
+    );
+    return (<div></div>);
+};
+
+const LoadAds = async () => {
+    const response = await fetch('/getToken');
+    const data = await response.json();
+    const response2 = await fetch('/getPremium');
+    const premiumData = await response2.json();
+    ReactDOM.render(
+        <Ads premium={premiumData.premium ? premiumData.premium : "false"} />,
+        document.getElementById('ads')
+    );
+    // re-render premium mode button too
+    ReactDOM.render(
+        <PremiumButton premium={premiumData.premium} csrf={data.csrfToken} />,
+        document.getElementById('premium')
+    );
+};
+
+const PremiumButton = (props) => {
+    if(props.premium === "true") return (
+        <form id="premiumForm"
+            name="premiumForm"
+            onSubmit={(e) => SetPremium(e, "false")}
+            action="/setPremium"
+            method="POST"
+            className="premiumForm"
+        >
+            <h3>You have premium!</h3>
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="premiumButton" type="submit" value="Remove Premium" />
+        </form>
+    );
+    return (
+        <form id="premiumForm"
+            name="premiumForm"
+            onSubmit={(e) => SetPremium(e, "true")}
+            action="/setPremium"
+            method="POST"
+            className="premiumForm"
+        >
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="premiumButton" type="submit" value="Buy Premium" />
+        </form>
+    );
 }
 
 // list all posts passed in props
@@ -79,6 +146,8 @@ const init = async () => {
     // get token
     const response = await fetch('/getToken');
     const data = await response.json();
+    const response2 = await fetch('/getPremium');
+    const premiumData = await response2.json();
     // hook up event listeners (windows to buttons)
     
     ReactDOM.render(
@@ -86,10 +155,15 @@ const init = async () => {
         document.getElementById('makePost')
     );
 
+    // render premium mode button
+    ReactDOM.render(
+        <PremiumButton premium={premiumData.premium} csrf={data.csrfToken} />,
+        document.getElementById('premium')
+    );
+
+    // load stuff
     loadPostsFromServer();
-    // render postmaker
-    // render posts
-    // render ads
+    LoadAds();
 }
 
 window.onload = init;
