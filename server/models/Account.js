@@ -61,7 +61,9 @@ AccountSchema.statics.authenticate = async (username, password, callback) => {
 // updates this account's premium status (search by id)
 AccountSchema.statics.updatePremium = async (_id, updatedPremium, callback) => {
   try {
-    const doc = await AccountModel.findOneAndUpdate({ _id }, { premium: updatedPremium }).exec();
+    const filter = { _id };
+    const update = { premium: updatedPremium };
+    const doc = await AccountModel.findOneAndUpdate(filter, update, { new: true }).exec();
     if (!doc) {
       return callback();
     }
