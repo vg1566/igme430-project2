@@ -53,10 +53,16 @@ const SetPremium = async (e, value) => {
     return false;
 }
 
+const getRandomAd = () => {
+    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg'];
+    const rand = Math.floor(Math.random() * adList.length);
+    return `<img src="${adList[rand]}" alt="ad" className="ad" />`;
+}
+
 const Ads = (props) => {
     if(props.premium === "false") return (
         <div id="ads" className="adBox">
-            <img src="/assets/img/ad1.jpg" alt="ad" className="ad" />
+            {getRandomAd()}
         </div>
     );
     return (<div></div>);
