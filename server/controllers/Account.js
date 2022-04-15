@@ -1,4 +1,6 @@
-// controls actual server communication a la creating/saving new accounts and authenticating old ones and such
+// controls actual server communication
+// a la creating/saving new accounts and authenticating old ones and such
+
 // requires: models
 // exports: loginPage, login, logout, signup, setPremium, getToken, getPremium,
 
@@ -70,7 +72,7 @@ const signup = async (req, res) => {
 };
 
 const setPremium = (req, res) => {
-  return Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
+  Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Something went wrong...' });
     }
@@ -85,17 +87,15 @@ const setPremium = (req, res) => {
 const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
 // return premium
-const getPremium = (req, res) => {
-  return Account.premium(req.session.account._id, (err, premium) => {
-    if (err) {
-      return res.status(401).json({ error: 'Something went wrong...' });
-    }
+const getPremium = (req, res) => Account.premium(req.session.account._id, (err, premium) => {
+  if (err) {
+    return res.status(401).json({ error: 'Something went wrong...' });
+  }
 
-    // set session account and redirect to main page
-    req.session.account.premium = premium;
-    return res.json({ premium: premium }); // what to put instead?
-  });
-};
+  // set session account and redirect to main page
+  req.session.account.premium = premium;
+  return res.json({ premium }); // what to put instead?
+});
 
 module.exports = {
   loginPage,

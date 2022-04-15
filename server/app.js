@@ -1,7 +1,6 @@
 // imports and starts everything needed. The "beginning" of the code
 
 // imports
-const config = require('./config.js');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -15,6 +14,7 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const redis = require('redis');
 const csrf = require('csurf');
+const config = require('./config.js');
 
 const router = require('./router.js');
 

@@ -9,25 +9,25 @@ const saltRounds = 10;
 let AccountModel = {};
 
 const AccountSchema = new mongoose.Schema({
-    username: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-      match: /^[A-Za-z0-9_\-.]{1,16}$/,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    premium: {
-      type: String,
-      default: "false",
-    },
-    createdDate: {
-      type: Date,
-      default: Date.now,
-    },
+  username: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+    match: /^[A-Za-z0-9_\-.]{1,16}$/,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  premium: {
+    type: String,
+    default: 'false',
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // converts a doc to something redis-storable
@@ -42,46 +42,46 @@ AccountSchema.statics.generateHash = (password) => bcrypt.hash(password, saltRou
 
 // check if info is correct (find password attached to username and compare passwords w/ bcrypt)
 AccountSchema.statics.authenticate = async (username, password, callback) => {
-    try {
-      const doc = await AccountModel.findOne({ username }).exec();
-      if (!doc) {
-        return callback();
-      }
-  
-      const match = await bcrypt.compare(password, doc.password);
-      if (match) {
-        return callback(null, doc);
-      }
+  try {
+    const doc = await AccountModel.findOne({ username }).exec();
+    if (!doc) {
       return callback();
-    } catch (err) {
-      return callback(err);
     }
+
+    const match = await bcrypt.compare(password, doc.password);
+    if (match) {
+      return callback(null, doc);
+    }
+    return callback();
+  } catch (err) {
+    return callback(err);
+  }
 };
 
 // updates this account's premium status (search by id)
 AccountSchema.statics.updatePremium = async (_id, updatedPremium, callback) => {
-    try {
-        const doc = await AccountModel.findOneAndUpdate({ username }, { premium: updatedPremium }).exec();
-        if (!doc) {
-            return callback();
-        }
-        return callback(null, doc);
-      } catch (err) {
-        return callback(err);
-      }
+  try {
+    const doc = await AccountModel.findOneAndUpdate({ _id }, { premium: updatedPremium }).exec();
+    if (!doc) {
+      return callback();
+    }
+    return callback(null, doc);
+  } catch (err) {
+    return callback(err);
+  }
 };
 
 // retrieves whether or not this account has premium (search by id)
 AccountSchema.statics.premium = async (_id, callback) => {
-    try {
-        const doc = await AccountModel.findOne({ username }).exec();
-        if (!doc) {
-            return callback();
-        }
-        return callback(null, doc.premium);
-      } catch (err) {
-        return callback(err);
-      }
+  try {
+    const doc = await AccountModel.findOne({ _id }).exec();
+    if (!doc) {
+      return callback();
+    }
+    return callback(null, doc.premium);
+  } catch (err) {
+    return callback(err);
+  }
 };
 
 AccountModel = mongoose.model('Account', AccountSchema);
