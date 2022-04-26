@@ -72,6 +72,7 @@ const signup = async (req, res) => {
 };
 
 const setPremium = (req, res) => {
+  console.log(req.body.premium);
   Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Something went wrong...' });

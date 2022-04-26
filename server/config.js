@@ -5,7 +5,7 @@ const connections = {
     http: {
       port: 3000,
     },
-    mongo: 'mongodb://127.0.0.1/simpleMVCExample',
+    mongo: process.env.MONGODB_URI || 'mongodb://127.0.0.1/project2',
     redis: process.env.REDISCLOUD_URL,
   },
 

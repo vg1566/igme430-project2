@@ -38,14 +38,12 @@ const handlePost = (e) => {
     return false;
 }
 
-const SetPremium = async (e, value) => {
+const SetPremium = async (e, newPremiumValue) => {
     e.preventDefault();
     helper.hideError();
 
-    const isPremium = value;
     const _csrf = e.target.querySelector('#_csrf').value;
-    
-    helper.sendPost(e.target.action, {isPremium, _csrf}, LoadAds);
+    helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf}, LoadAds);
 
     // re-render premium stuff
     LoadAds();
