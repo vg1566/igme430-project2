@@ -5,7 +5,7 @@ const helper = require('./helper.js');
 const AccountInfo = (props) => {
     return (
         <div id="accountInfo" className="center-text">
-            <h1>{props.username}'s Profile</h1>
+            <h1>{(props.username).toUpperCase()}'S PROFILE</h1>
         </div>
     );
 }
@@ -100,22 +100,26 @@ const PostList = (props) => {
     if(props.posts.length === 0) {
         return (
             <div className="PostList">
-                <h3>You haven't posted anything yet!</h3>
+                <h3>Looks awfully empty here... Why not post something?</h3>
             </div>
         );
     }
 
     const postNodes = props.posts.reverse().map(post => {
         return (
-            <div key={post._id} className="post card">
-                <h3> {post.username}: </h3>
-                <p> {post.mainBody} </p>
+            <div key={post._id} className="post card fluid">
+                <div className="section dark">
+                    <h4> {post.username}: </h4>
+                </div>
+                <div className="section">
+                    <p> {post.mainBody} </p>
+                </div>
             </div>
         );
     });
 
     return (
-        <div className="postList">
+        <div className="postList col-sm">
             {postNodes}
         </div>
     );
@@ -123,7 +127,7 @@ const PostList = (props) => {
 
 // get current user's posts and send to PostList
 const loadUserPostsFromServer = async () => {
-    const response = await fetch('/getPosts'); // /getUserPosts
+    const response = await fetch('/getUserPosts'); 
     const data = await response.json();
     ReactDOM.render(
         <PostList posts={data.posts} />,

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const _ = require('underscore');
 
 let PostModel = {};
 
@@ -29,8 +28,12 @@ PostSchema.statics.toAPI = (doc) => ({
   mainBody: doc.mainBody,
 });
 
-// To-do: findByPoster
+// searches with username
+PostSchema.statics.findByPoster = (username, callback) => {
+  PostModel.find({ username }).select('username mainBody').lean().exec(callback);
+};
 
+// returns all posts
 PostSchema.statics.findAll = (callback) => {
   PostModel.find({}).select('username mainBody').lean().exec(callback);
 };

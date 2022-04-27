@@ -46,18 +46,19 @@ const getPosts = (req, res) => PostModel.findAll((err, docs) => {
   return res.json({ posts: docs });
 });
 
-// const getUserPosts = (req, res) => {
-//  PostModel.findByPoster(req.session.account._id, (err, docs) => {
-//    if (err) {
-//      console.log(err);
-//      return res.status(400).json({ error: 'An error occured when getting posts' });
-//    }
-//  return res.json({ posts: docs });
-// })};
+// get all posts by certain user (using username) via PostModel 
+const getUserPosts = (req, res) => {
+ PostModel.findByPoster(req.session.account.username, (err, docs) => {
+   if (err) {
+     console.log(err);
+     return res.status(400).json({ error: 'An error occured when getting posts' });
+   }
+ return res.json({ posts: docs });
+})};
 
 module.exports = {
   mainPage,
   makePost,
   getPosts,
-  // getUserPosts,
+  getUserPosts,
 };
