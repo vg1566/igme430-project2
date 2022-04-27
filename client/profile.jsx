@@ -63,6 +63,15 @@ const SetPremium = async (e, newPremiumValue) => {
 
     const _csrf = e.target.querySelector('#_csrf').value;
     helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf});
+    
+    const response = await fetch('/getToken');
+    const data = await response.json();
+    
+    // re-render premium mode button
+    ReactDOM.render(
+        <PremiumButton premium={newPremiumValue} csrf={data.csrfToken} />,
+        document.getElementById('premium')
+    );
 
     return false;
 }

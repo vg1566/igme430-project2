@@ -77,14 +77,16 @@ const signup = async (req, res) => {
 };
 
 const setPremium = (req, res) => {
-  Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
+  // id separated due to max line length
+  const id = req.session.account._id;
+  return Account.updatePremium(id, req.body.premium, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Something went wrong...' });
     }
 
     // set session account
     req.session.account.premium = req.body.premium;
-    return res.status(204).json({ premium: req.body.premium });
+    return res.status(200).json({ message: 'Premium status successfully updated' });
   });
 };
 
@@ -131,7 +133,7 @@ const changeUsername = (req, res) => {
 
     // set session username
     req.session.account.username = req.body.username;
-    return res.status(204).json({ message: 'Username changed successfully' });
+    return res.status(200).json({ message: 'Username changed successfully' });
   });
 };
 
