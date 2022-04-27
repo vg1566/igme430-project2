@@ -169,7 +169,10 @@ const changeUsername = async (req, res) => {
 // return token
 const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
-const getUserInfo = (req, res) => res.json({ username: req.session.account.username });
+const getUserInfo = (req, res) => res.json({
+  username: req.session.account.username,
+  _id: req.session.account._id,
+});
 
 // return premium
 const getPremium = (req, res) => Account.premium(req.session.account._id, (err, premium) => {

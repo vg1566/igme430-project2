@@ -3,20 +3,20 @@ const helper = require('./helper.js');
 
 // return "html" of post maker form
 const PostForm = (props) => {
-    return (
-        <form id="postForm"
-            name="postForm"
-            onSubmit={handlePost}
-            action="/makePost"
-            method="POST"
-            className="input-group vertical col-sm"
-        >
-            <label htmlFor="mainBody">Make a Post! </label>
-            <textarea id="mainBody" name="mainBody" placeholder="Type something here..." />
-            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-            <input type="submit" value="Post" />
-        </form>
-    );
+  return (
+    <form id="postForm"
+      name="postForm"
+      onSubmit={handlePost}
+      action="/makePost"
+      method="POST"
+      className="input-group vertical col-sm"
+    >
+      <label htmlFor="mainBody">Make a Post! </label>
+      <textarea id="mainBody" name="mainBody" placeholder="Type something here..." />
+      <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+      <input type="submit" value="Post" />
+    </form>
+  );
 }
 // construct and send post
 const handlePost = (e) => {
@@ -113,40 +113,69 @@ const PremiumButton = (props) => {
 
 // list all posts passed in props
 const PostList = (props) => {
-    if(props.posts.length === 0) {
-        return (
-            <div className="PostList">
-                <h3>Looks awfully empty here... Why not post something?</h3>
-            </div>
-        );
-    }
-
-    const postNodes = props.posts.reverse().map(post => {
-        return (
-            <div key={post._id} className="post card fluid">
-                <div className="section dark">
-                    <h4> {post.username}: </h4>
-                </div>
-                <div className="section">
-                    <p> {post.mainBody} </p>
-                </div>
-            </div>
-        );
-    });
-
+  if(props.posts.length === 0) {
     return (
-        <div className="postList col-sm">
-            {postNodes}
-        </div>
+      <div className="PostList">
+        <h3>Looks awfully empty here... Why not post something?</h3>
+      </div>
     );
+  }
+  
+  const postNodes = props.posts.reverse().map(post => {
+    if(post.poster === props._id) {  return(
+      <div key={post._id} className="post card fluid">
+        <div className="section dark">
+          <h4> {post.username}: </h4>
+        </div>
+        <div className="section">
+          <p> {post.mainBody} </p>
+        </div>
+        <form
+          name="deleteForm"
+          action="/deletePost"
+          onSubmit={(e) => { 
+            e.preventDefault();
+            helper.hideError();
+            helper.sendPost(e.target.action, { 
+                postId: post._id,
+                _csrf: props.csrf
+            }, loadPostsFromServer);
+          }}
+          method="POST"
+        >
+          <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+          <input className="deleteButton" type="submit" value="Delete Post" />
+        </form>
+      </div>
+    )} else { return (
+        <div key={post._id} className="post card fluid">
+            <div className="section dark">
+                <h4> {post.username}: </h4>
+            </div>
+            <div className="section">
+                <p> {post.mainBody} </p>
+            </div>
+        </div>
+    )};
+  });
+  
+  return (
+      <div className="postList col-sm">
+          {postNodes}
+      </div>
+  );
 }
 
 // get posts and send to PostList
 const loadPostsFromServer = async () => {
     const response = await fetch('/getPosts');
     const data = await response.json();
+    const response2 = await fetch('/getUserInfo');
+    const data2 = await response2.json();
+    const response3 = await fetch('/getToken');
+    const data3 = await response3.json();
     ReactDOM.render(
-        <PostList posts={data.posts} />,
+        <PostList posts={data.posts} _id={data2._id} csrf={data3.csrfToken} />,
         document.getElementById('content')
     );
 }
@@ -157,7 +186,6 @@ const init = async () => {
     const data = await response.json();
     const response2 = await fetch('/getPremium');
     const premiumData = await response2.json();
-    // hook up event listeners (windows to buttons)
     
     ReactDOM.render(
         <PostForm csrf={data.csrfToken} />,

@@ -20,7 +20,6 @@ const hideError = () => {
 };
 
 const sendPost = async (url, data, handler) => {
-
   const response = await fetch(url, {
     method: 'POST',
     headers: {

@@ -43,17 +43,28 @@ const getPosts = (req, res) => PostModel.findAll((err, docs) => {
     return res.status(400).json({ error: 'An error occured when getting posts' });
   }
 
-  return res.json({ posts: docs });
+  return res.status(200).json({ posts: docs });
 });
 
 // get all posts by certain user (using username) via PostModel
 const getUserPosts = (req, res) => {
-  PostModel.findByPoster(req.session.account.username, (err, docs) => {
+  PostModel.findByPoster(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured when getting posts' });
     }
-    return res.json({ posts: docs });
+    return res.status(200).json({ posts: docs });
+  });
+};
+
+// get certain post (using its id) via PostModel and delete it
+const deletePost = (req, res) => {
+  PostModel.deletePost(req.body.postId, (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured when getting posts' });
+    }
+    return res.status(200).json({ message: 'Post deleted successfully' });
   });
 };
 
@@ -62,4 +73,5 @@ module.exports = {
   makePost,
   getPosts,
   getUserPosts,
+  deletePost,
 };

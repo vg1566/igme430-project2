@@ -28,14 +28,19 @@ PostSchema.statics.toAPI = (doc) => ({
   mainBody: doc.mainBody,
 });
 
-// searches with username
-PostSchema.statics.findByPoster = (username, callback) => {
-  PostModel.find({ username }).select('username mainBody').lean().exec(callback);
+// searches with id
+PostSchema.statics.findByPoster = (_id, callback) => {
+  PostModel.find({ poster: _id }).select('username mainBody poster').lean().exec(callback);
 };
 
 // returns all posts
 PostSchema.statics.findAll = (callback) => {
-  PostModel.find({}).select('username mainBody').lean().exec(callback);
+  PostModel.find({}).select('username mainBody poster').lean().exec(callback);
+};
+
+// deletes a single post
+PostSchema.statics.deletePost = (_id, callback) => {
+  PostModel.find({ _id }).deleteOne().exec(callback);
 };
 
 PostModel = mongoose.model('Post', PostSchema);
