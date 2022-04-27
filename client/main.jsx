@@ -124,28 +124,30 @@ const PostList = (props) => {
   const postNodes = props.posts.reverse().map(post => {
     if(post.poster === props._id) {  return(
       <div key={post._id} className="post card fluid">
-        <div className="section dark">
-          <h4> {post.username}: </h4>
+        <div className="section dark row">
+          <h4 className="col-sm"> {post.username}: </h4>
+          <form
+              name="deleteForm"
+              action="/deletePost"
+              onSubmit={(e) => { 
+                  e.preventDefault();
+                  helper.hideError();
+                  helper.sendPost(e.target.action, { 
+                      postId: post._id,
+                      _csrf: props.csrf
+                  }, loadPostsFromServer);
+              }}
+              method="POST"
+              className="deleteForm col-sm"
+          >
+              <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+              <input className="deleteButton" type="submit" value="Delete Post" />
+          </form>
         </div>
         <div className="section">
           <p> {post.mainBody} </p>
         </div>
-        <form
-          name="deleteForm"
-          action="/deletePost"
-          onSubmit={(e) => { 
-            e.preventDefault();
-            helper.hideError();
-            helper.sendPost(e.target.action, { 
-                postId: post._id,
-                _csrf: props.csrf
-            }, loadPostsFromServer);
-          }}
-          method="POST"
-        >
-          <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-          <input className="deleteButton" type="submit" value="Delete Post" />
-        </form>
+        
       </div>
     )} else { return (
         <div key={post._id} className="post card fluid">

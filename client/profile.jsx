@@ -156,39 +156,70 @@ const PremiumButton = (props) => {
 // list all posts passed in props
 const PostList = (props) => {
     if(props.posts.length === 0) {
-        return (
-            <div className="PostList">
-                <h3>Looks awfully empty here... Why not post something?</h3>
-            </div>
-        );
+      return (
+        <div className="PostList">
+          <h3>Looks awfully empty here... Why not post something?</h3>
+        </div>
+      );
     }
-
+    
     const postNodes = props.posts.reverse().map(post => {
-        return (
-            <div key={post._id} className="post card fluid">
-                <div className="section dark">
-                    <h4> {post.username}: </h4>
-                </div>
-                <div className="section">
-                    <p> {post.mainBody} </p>
-                </div>
-            </div>
-        );
+      if(post.poster === props._id) {  return(
+        <div key={post._id} className="post card fluid">
+          <div className="section dark row">
+            <h4 className="col-sm"> {post.username}: </h4>
+            <form
+                name="deleteForm"
+                action="/deletePost"
+                onSubmit={(e) => { 
+                    e.preventDefault();
+                    helper.hideError();
+                    helper.sendPost(e.target.action, { 
+                        postId: post._id,
+                        _csrf: props.csrf
+                    }, loadUserPostsFromServer);
+                }}
+                method="POST"
+                className="deleteForm col-sm"
+            >
+                <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+                <input className="deleteButton" type="submit" value="Delete Post" />
+            </form>
+          </div>
+          <div className="section">
+            <p> {post.mainBody} </p>
+          </div>
+          
+        </div>
+      )} else { return (
+          <div key={post._id} className="post card fluid">
+              <div className="section dark">
+                  <h4> {post.username}: </h4>
+              </div>
+              <div className="section">
+                  <p> {post.mainBody} </p>
+              </div>
+          </div>
+      )};
     });
-
+    
     return (
         <div className="postList col-sm">
             {postNodes}
         </div>
     );
-}
+  }
 
 // get current user's posts and send to PostList
 const loadUserPostsFromServer = async () => {
     const response = await fetch('/getUserPosts'); 
     const data = await response.json();
+    const response2 = await fetch('/getUserInfo');
+    const data2 = await response2.json();
+    const response3 = await fetch('/getToken');
+    const data3 = await response3.json();
     ReactDOM.render(
-        <PostList posts={data.posts} />,
+        <PostList posts={data.posts} _id={data2._id} csrf={data3.csrfToken} />,
         document.getElementById('accountPosts')
     );
 }
