@@ -77,7 +77,6 @@ const signup = async (req, res) => {
 };
 
 const setPremium = (req, res) => {
-  console.log(req.body.premium);
   Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Something went wrong...' });
@@ -85,7 +84,53 @@ const setPremium = (req, res) => {
 
     // set session account
     req.session.account.premium = req.body.premium;
-    return res.json({ premium: req.body.premium });
+    return res.status(204).json({ premium: req.body.premium });
+  });
+};
+
+const changePassword = async (req, res) => {
+  const username = `${req.session.account.username}`;
+  const oldPass = `${req.body.oldPass}`;
+  const pass = `${req.body.pass}`;
+  const pass2 = `${req.body.pass2}`;
+
+  // check for bad data
+  if (!username || !oldPass || !pass || !pass2) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  if (pass !== pass2) {
+    return res.status(400).json({ error: 'Passwords do not match!' });
+  }
+
+  // authenticate user
+  return Account.authenticate(username, oldPass, async (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Wrong password!' });
+    }
+    try {
+      const hash = await Account.generateHash(pass);
+  
+      Account.changePassword(username, hash, (err, account) => {
+        if (err || !account) {
+          return res.status(401).json({ error: 'Something went wrong when authorizing' });
+        }
+        return res.status(200).json({ message: 'Password changed successfully' });
+      });
+    } catch(err) {
+      return res.status(400).json({ error: 'An error occured' });
+    }
+  });
+};
+
+const changeUsername = (req, res) => {
+  Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Something went wrong...' });
+    }
+
+    // set session username
+    req.session.account.username = req.body.username;
   });
 };
 
@@ -97,12 +142,12 @@ const getUserInfo = (req, res) => res.json({ username: req.session.account.usern
 // return premium
 const getPremium = (req, res) => Account.premium(req.session.account._id, (err, premium) => {
   if (err) {
-    return res.status(401).json({ error: 'Something went wrong...' });
+    return res.status(401).json({ error: 'Something went wrong when authorizing' });
   }
 
   // set session account and redirect to main page
   req.session.account.premium = premium;
-  return res.json({ premium }); // what to put instead?
+  return res.status(200).json({ premium }); // what to put instead?
 });
 
 module.exports = {
@@ -112,6 +157,8 @@ module.exports = {
   logout,
   signup,
   setPremium,
+  changePassword,
+  changeUsername,
   getToken,
   getPremium,
   getUserInfo,

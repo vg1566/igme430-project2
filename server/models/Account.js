@@ -73,6 +73,22 @@ AccountSchema.statics.updatePremium = async (_id, updatedPremium, callback) => {
   }
 };
 
+// updates this account's password (search by username)
+AccountSchema.statics.changePassword = async (username, password, callback) => {
+  try {
+    const filter = { username };
+    const update = { password: password };
+    const doc = await AccountModel.updateOne(filter, update);
+    
+    if (!doc) {
+      return callback();
+    }
+    return callback(null, doc);
+  } catch (err) {
+    return callback(err);
+  }
+};
+
 // retrieves whether or not this account has premium (search by id)
 AccountSchema.statics.premium = async (_id, callback) => {
   try {

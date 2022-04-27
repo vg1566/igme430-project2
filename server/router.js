@@ -22,6 +22,8 @@ const router = (app) => {
   app.post('/makePost', mid.requiresLogin, controllers.Post.makePost);
 
   app.get('/profile', mid.requiresLogin, controllers.Account.profilePage);
+  app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);
+  app.post('/changeUsername', mid.requiresLogin, controllers.Account.changeUsername);
 
   app.get('/getPremium', mid.requiresLogin, controllers.Account.getPremium);
   app.post('/setPremium', mid.requiresLogin, controllers.Account.setPremium);

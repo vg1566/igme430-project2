@@ -1,7 +1,7 @@
 // This file handles the main page with react
 const helper = require('./helper.js');
 
-// return "html" of post maker form
+// return "html" of account info
 const AccountInfo = (props) => {
     return (
         <div id="accountInfo">
@@ -10,39 +10,48 @@ const AccountInfo = (props) => {
     );
 }
 
-// return "html" of post maker form
-const PostForm = (props) => {
+// return "html" of password change form
+const PasswordChangeForm = (props) => {
     return (
-        <form id="postForm"
-            name="postForm"
-            onSubmit={handlePost}
-            action="/makePost"
+        <form id="passwordChangeForm"
+            name="passwordChangeForm"
+            onSubmit={handlePasswordChange}
+            action="/changePassword"
             method="POST"
             className="input-group vertical"
         >
-            <label htmlFor="mainBody">Make a Post! </label>
-            <textarea id="mainBody" name="mainBody" placeholder="Type something here..." />
+            <label htmlFor="oldPass">Old Password: </label>
+            <input id="oldPass" type="text" name="oldPass" placeholder="old password" />
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="new password" />
+            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-            <input type="submit" value="Post" />
+            <input className="formSubmit" type="submit" value="Change password" />
         </form>
     );
 }
-// construct and send post
-const handlePost = (e) => {
+
+const handlePasswordChange = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const mainBody = e.target.querySelector('#mainBody').value;
+    const oldPass = e.target.querySelector('#oldPass').value;
+    const pass = e.target.querySelector('#pass').value;
+    const pass2 = e.target.querySelector('#pass2').value;
     const _csrf = e.target.querySelector('#_csrf').value;
 
-    // check if data is good
-    if(!mainBody) {
-        helper.handleError('Brevity is the soul of wit, but you must enter <i>something</i>.');
+    // check if data is good (e.g. no missing field)
+    if(!oldPass || !pass || !pass2) {
+        helper.handleError('All fields are required!');
+        return false;
+    }
+    if(pass !== pass2) {
+        helper.handleError('New passwords do not match!');
         return false;
     }
 
-    // post to server and reload post list
-    helper.sendPost(e.target.action, {mainBody, _csrf}, loadPostsFromServer);
+    // action is /changePassword
+    helper.sendPost(e.target.action, {oldPass, pass, pass2, _csrf});
 
     return false;
 }
@@ -52,7 +61,7 @@ const SetPremium = async (e, newPremiumValue) => {
     helper.hideError();
 
     const _csrf = e.target.querySelector('#_csrf').value;
-    helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf}, LoadAds);
+    helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf});
 
     return false;
 }
@@ -136,9 +145,10 @@ const init = async () => {
         document.getElementById('accountInfo')
     );
 
+    // render password change form
     ReactDOM.render(
-        <PostForm csrf={data.csrfToken} />,
-        document.getElementById('accountOptions')
+        <PasswordChangeForm csrf={data.csrfToken} />,
+        document.getElementById('passwordChange')
     );
 
     // render premium mode button
