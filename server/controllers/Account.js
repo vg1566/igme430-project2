@@ -120,7 +120,7 @@ const changePassword = async (req, res) => {
     } catch (err3) {
       return res.status(400).json({ error: 'An error occurred' });
     }
-    return res.status(401).json({ error: 'An error occurred' });
+    return res.status(400).json({ error: 'An error occurred' });
   });
 };
 

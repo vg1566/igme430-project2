@@ -9,7 +9,7 @@ const PostForm = (props) => {
             onSubmit={handlePost}
             action="/makePost"
             method="POST"
-            className="input-group vertical"
+            className="input-group vertical col-sm"
         >
             <label htmlFor="mainBody">Make a Post! </label>
             <textarea id="mainBody" name="mainBody" placeholder="Type something here..." />
@@ -59,7 +59,7 @@ const getRandomAd = () => {
 
 const Ads = (props) => {
     if(props.premium === "false") return (
-        <div id="ads" className="adBox">
+        <div id="ads" className="adBox col-sm">
             <img src={`${getRandomAd()}`} alt="ad" className="ad" />
         </div>
     );
@@ -122,15 +122,19 @@ const PostList = (props) => {
 
     const postNodes = props.posts.reverse().map(post => {
         return (
-            <div key={post._id} className="post card">
-                <h3> From: {post.username} </h3>
-                <p> {post.mainBody} </p>
+            <div key={post._id} className="post card fluid">
+                <div className="section dark">
+                    <h3> {post.username}: </h3>
+                </div>
+                <div className="section">
+                    <p> {post.mainBody} </p>
+                </div>
             </div>
         );
     });
 
     return (
-        <div className="postList">
+        <div className="postList col-sm">
             {postNodes}
         </div>
     );
