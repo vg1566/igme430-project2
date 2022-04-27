@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Main</title>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+</head>
+<body>
+  <nav class="row">
+    <a href="/logout">Log out</a>
+    <a href="/main">Main page</a>
+    <a href="/profile">View profile</a>
+  </nav>
+  
+  <div id="errorBox" class='hidden'>
+    <h3><span class="center-text" id="errorMessage"></span></h3>
+  </div>
+
+  <div id="normalMessageBox" class='hidden'>
+    <h3 class="center-text"><span id="normalMessage"></span></h3>
+  </div>
+
+  <section class="center-text" id="error404Box">
+    <h1>Oops!
+      <small>You've taken a wrong turn</small>
+    </h1>
+    <p>Whatever you're looking for, it's not here.</p>
+    <a href="/main">Click here to return to the main page</a>
+  </section>
+  
+</body>
+</html>

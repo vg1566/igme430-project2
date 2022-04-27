@@ -41,9 +41,14 @@ const login = (req, res) => {
   });
 };
 
-// render login with token
+// render profile page with token
 const profilePage = (req, res) => {
   res.render('profile', { csrfToken: req.csrfToken() });
+};
+
+// render 404 page with token
+const errorPage = (req, res) => {
+  res.render('404', { csrfToken: req.csrfToken() });
 };
 
 const signup = async (req, res) => {
@@ -181,6 +186,7 @@ module.exports = {
   loginPage,
   login,
   profilePage,
+  errorPage,
   logout,
   signup,
   setPremium,

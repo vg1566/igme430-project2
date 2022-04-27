@@ -1,7 +1,4 @@
 // handles routing
-// To-do: add account page
-// requires: controllers, middleware
-// exports: router
 
 const controllers = require('./controllers');
 const mid = require('./middleware');
@@ -30,6 +27,7 @@ const router = (app) => {
   app.post('/setPremium', mid.requiresLogin, controllers.Account.setPremium);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('*', mid.requiresSecure, mid.requiresLogin, controllers.Account.errorPage);
 };
 
 module.exports = router;

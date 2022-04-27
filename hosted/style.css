@@ -10,3 +10,7 @@
 .post {
     text-align: left;
 }
+
+#error404Box {
+    margin-top: 5%;
+}
