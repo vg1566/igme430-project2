@@ -10,26 +10,43 @@
   <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
 </head>
 <body>
-  <nav>
+  <nav class="row">
     <a href="/logout">Log out</a>
+    <a href="/main">Main page</a>
   </nav>
 
   <section id="accountInfo">
-    
+
   </section>
 
-  <section id="accountOptions">
-    <div id="premium"></div>
-    <div id="passwordChange"></div>
+  <hr>
+  
+  <div id="errorBox" class='hidden'>
+    <h3><span class="center-text" id="errorMessage"></span></h3>
+  </div>
+
+  <div id="normalMessageBox" class='hidden'>
+    <h3 class="center-text"><span id="normalMessage"></span></h3>
+  </div>
+
+  <section id="accountOptions row">
+    <div class="col-sm">
+      <h4 class="center-text"><strong>Account Options</strong></h4>
+    </div>
+    <div class="col-sm row">
+      <div class="col-sm-1"></div>
+      <div id="passwordChange" class="col-sm"></div>
+      <div id="premium" class="col-sm"></div>
+      <div id="passwordChange" class="col-sm"></div>
+      <div class="col-sm-1"></div>
+    </div>
   </section>
+
+  <hr>
 
   <section id="accountPosts">
     
   </section>
-
-  <div id="errorBox" class='hidden'>
-    <h3><span class="center-text" id="errorMessage"></span></h3>
-  </div>
 
   <script src="/assets/profileBundle.js"></script>
 </body>

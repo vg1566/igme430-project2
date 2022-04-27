@@ -24,6 +24,7 @@ const handlePost = (e) => {
     helper.hideError();
 
     const mainBody = e.target.querySelector('#mainBody').value;
+    e.target.querySelector('#mainBody').value = '';
     const _csrf = e.target.querySelector('#_csrf').value;
 
     // check if data is good
@@ -124,7 +125,7 @@ const PostList = (props) => {
         return (
             <div key={post._id} className="post card fluid">
                 <div className="section dark">
-                    <h3> {post.username}: </h3>
+                    <h4> {post.username}: </h4>
                 </div>
                 <div className="section">
                     <p> {post.mainBody} </p>

@@ -4,7 +4,7 @@ const helper = require('./helper.js');
 // return "html" of account info
 const AccountInfo = (props) => {
     return (
-        <div id="accountInfo">
+        <div id="accountInfo" className="center-text">
             <h1>{props.username}'s Profile</h1>
         </div>
     );
@@ -18,8 +18,9 @@ const PasswordChangeForm = (props) => {
             onSubmit={handlePasswordChange}
             action="/changePassword"
             method="POST"
-            className="input-group vertical"
+            className="input-group vertical col-sm"
         >
+            <h3>Change password</h3>
             <label htmlFor="oldPass">Old Password: </label>
             <input id="oldPass" type="text" name="oldPass" placeholder="old password" />
             <label htmlFor="pass">New Password: </label>
@@ -73,7 +74,7 @@ const PremiumButton = (props) => {
             onSubmit={(e) => SetPremium(e, "false")}
             action="/setPremium"
             method="POST"
-            className="premiumForm"
+            className="premiumForm center-text"
         >
             <h3>You have premium!</h3>
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
@@ -86,7 +87,7 @@ const PremiumButton = (props) => {
             onSubmit={(e) => SetPremium(e, "true")}
             action="/setPremium"
             method="POST"
-            className="premiumForm"
+            className="premiumForm center-text"
         >
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
             <input className="premiumButton" type="submit" value="Buy Premium" />

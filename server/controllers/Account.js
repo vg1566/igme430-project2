@@ -111,7 +111,7 @@ const changePassword = async (req, res) => {
     try {
       const hash = await Account.generateHash(pass);
 
-      Account.changePassword(username, hash, (err2, account2) => {
+      return Account.changePassword(username, hash, (err2, account2) => {
         if (err2 || !account2) {
           return res.status(401).json({ error: 'Something went wrong when authorizing' });
         }
@@ -120,7 +120,6 @@ const changePassword = async (req, res) => {
     } catch (err3) {
       return res.status(400).json({ error: 'An error occurred' });
     }
-    return res.status(400).json({ error: 'An error occurred' });
   });
 };
 

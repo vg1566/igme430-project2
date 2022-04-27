@@ -6,8 +6,14 @@ const handleError = (message) => {
     document.getElementById('errorBox').classList.remove('hidden');
 };
 
+const handleMessage = (message) => {
+  document.getElementById('normalMessage').textContent = message;
+  document.getElementById('normalMessageBox').classList.remove('hidden');
+};
+
 const hideError = () => {
     document.getElementById('errorBox').classList.add('hidden');
+    if(document.getElementById('normalMessageBox')) document.getElementById('normalMessageBox').classList.add('hidden');
 };
 
 const sendPost = async (url, data, handler) => {
@@ -21,10 +27,14 @@ const sendPost = async (url, data, handler) => {
     
   
     const result = await response.json();
-    document.getElementById('errorBox').classList.add('hidden');
+    hideError();
   
     if(result.error) {
       handleError(result.error);
+    }
+
+    if(result.message) {
+      handleMessage(result.message);
     }
 
     if(result.redirect) {
@@ -39,6 +49,7 @@ const sendPost = async (url, data, handler) => {
 
 module.exports = {
     handleError,
+    handleMessage,
     hideError,
     sendPost,
 };
