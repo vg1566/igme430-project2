@@ -77,9 +77,9 @@ AccountSchema.statics.updatePremium = async (_id, updatedPremium, callback) => {
 AccountSchema.statics.changePassword = async (username, password, callback) => {
   try {
     const filter = { username };
-    const update = { password: password };
+    const update = { password };
     const doc = await AccountModel.updateOne(filter, update);
-    
+
     if (!doc) {
       return callback();
     }

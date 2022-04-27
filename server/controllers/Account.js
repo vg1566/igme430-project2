@@ -110,16 +110,17 @@ const changePassword = async (req, res) => {
     }
     try {
       const hash = await Account.generateHash(pass);
-  
-      Account.changePassword(username, hash, (err, account) => {
-        if (err || !account) {
+
+      Account.changePassword(username, hash, (err2, account2) => {
+        if (err2 || !account2) {
           return res.status(401).json({ error: 'Something went wrong when authorizing' });
         }
         return res.status(200).json({ message: 'Password changed successfully' });
       });
-    } catch(err) {
-      return res.status(400).json({ error: 'An error occured' });
+    } catch (err3) {
+      return res.status(400).json({ error: 'An error occurred' });
     }
+    return res.status(401).json({ error: 'An error occurred' });
   });
 };
 
@@ -131,6 +132,7 @@ const changeUsername = (req, res) => {
 
     // set session username
     req.session.account.username = req.body.username;
+    return res.status(204).json({ message: 'Username changed successfully' });
   });
 };
 
