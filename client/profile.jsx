@@ -20,10 +20,10 @@ const PasswordChangeForm = (props) => {
             method="POST"
             className="input-group vertical col-sm"
         >
-            <h3>Change password</h3>
-            <label htmlFor="oldPass">Old Password: </label>
-            <input id="oldPass" type="text" name="oldPass" placeholder="old password" />
-            <label htmlFor="pass">New Password: </label>
+            <h3>Change Password</h3>
+            <label htmlFor="oldPass">Old password: </label>
+            <input id="oldPass" type="password" name="oldPass" placeholder="old password" />
+            <label htmlFor="pass">New password: </label>
             <input id="pass" type="password" name="pass" placeholder="new password" />
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
@@ -32,6 +32,7 @@ const PasswordChangeForm = (props) => {
     );
 }
 
+// check data then send to /changePassword via helper
 const handlePasswordChange = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -57,19 +58,67 @@ const handlePasswordChange = (e) => {
     return false;
 }
 
+// return "html" of username change form
+const UsernameChangeForm = (props) => {
+    return (
+        <form id="usernameChangeForm"
+            name="usernameChangeForm"
+            onSubmit={handleUsernameChange}
+            action="/changeUsername" 
+            method="POST"
+            className="input-group vertical col-sm"
+        >
+            <h3>Change Username</h3>
+            <label htmlFor="oldUser">Old account info: </label>
+            <input id="oldUser" type="text" name="oldUser" placeholder="old username" />
+            <input id="pass" type="password" name="pass" placeholder="password" />
+            <label htmlFor="newUser">New username: </label>
+            <input id="newUser" type="text" name="newUser" placeholder="new username" />
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Change username" />
+        </form>
+    );
+}
+
+// check data then send to /changeUsername via helper
+const handleUsernameChange = async (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const oldUser = e.target.querySelector('#oldUser').value;
+    const pass = e.target.querySelector('#pass').value;
+    const newUser = e.target.querySelector('#newUser').value;
+    const _csrf = e.target.querySelector('#_csrf').value;
+
+    // check if data is good (e.g. no missing field)
+    if(!oldUser || !pass || !newUser) {
+        helper.handleError('All fields are required!');
+        return false;
+    }
+
+    // action is /changeUsername
+    helper.sendPost(e.target.action, {oldUser, pass, newUser, _csrf});
+
+    //helper.sendPost('/changeUsernameOnPosts', {oldUser, pass, newUser, _csrf});
+
+    ReactDOM.render(
+        <AccountInfo username={newUser} csrf={_csrf} />,
+        document.getElementById('accountInfo')
+    );
+
+    return false;
+}
+
 const SetPremium = async (e, newPremiumValue) => {
     e.preventDefault();
     helper.hideError();
 
     const _csrf = e.target.querySelector('#_csrf').value;
     helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf});
-    
-    const response = await fetch('/getToken');
-    const data = await response.json();
-    
+
     // re-render premium mode button
     ReactDOM.render(
-        <PremiumButton premium={newPremiumValue} csrf={data.csrfToken} />,
+        <PremiumButton premium={newPremiumValue} csrf={_csrf} />,
         document.getElementById('premium')
     );
 
@@ -153,7 +202,6 @@ const init = async () => {
     const response3 = await fetch('/getUserInfo');
     const userData = await response3.json();
 
-    // hook up event listeners (windows to buttons)
     ReactDOM.render(
         <AccountInfo username={userData.username} csrf={data.csrfToken} />,
         document.getElementById('accountInfo')
@@ -163,6 +211,12 @@ const init = async () => {
     ReactDOM.render(
         <PasswordChangeForm csrf={data.csrfToken} />,
         document.getElementById('passwordChange')
+    );
+
+    // render username change form
+    ReactDOM.render(
+        <UsernameChangeForm csrf={data.csrfToken} />,
+        document.getElementById('usernameChange')
     );
 
     // render premium mode button

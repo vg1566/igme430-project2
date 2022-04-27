@@ -89,6 +89,22 @@ AccountSchema.statics.changePassword = async (username, password, callback) => {
   }
 };
 
+// updates this account's username (search by username)
+AccountSchema.statics.changeUsername = async (oldUser, newUser, callback) => {
+  try {
+    const filter = { username: oldUser };
+    const update = { username: newUser };
+    const doc = await AccountModel.updateOne(filter, update);
+
+    if (!doc) {
+      return callback();
+    }
+    return callback(null, doc);
+  } catch (err) {
+    return callback(err);
+  }
+};
+
 // retrieves whether or not this account has premium (search by id)
 AccountSchema.statics.premium = async (_id, callback) => {
   try {

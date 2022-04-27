@@ -8,7 +8,7 @@ const mid = require('./middleware');
 
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
-  app.get('/getUserInfo', mid.requiresLogin, controllers.Account.getUserInfo);
+  app.get('/getUserInfo', mid.requiresSecure, controllers.Account.getUserInfo);
   app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
   app.get('/getUserPosts', mid.requiresLogin, controllers.Post.getUserPosts);
 

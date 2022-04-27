@@ -125,15 +125,39 @@ const changePassword = async (req, res) => {
   });
 };
 
-const changeUsername = (req, res) => {
-  Account.updatePremium(req.session.account._id, req.body.premium, (err, account) => {
-    if (err || !account) {
-      return res.status(401).json({ error: 'Something went wrong...' });
-    }
+const changeUsername = async (req, res) => {
+  const oldUser = `${req.body.oldUser}`;
+  const pass = `${req.body.pass}`;
+  const newUser = `${req.body.newUser}`;
 
-    // set session username
-    req.session.account.username = req.body.username;
-    return res.status(200).json({ message: 'Username changed successfully' });
+  // check for bad data
+  if (!oldUser || !pass || !newUser) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  if (oldUser !== req.session.account.username) {
+    return res.status(400).json({ error: 'Current username entered incorrectly!' });
+  }
+
+  // authenticate user
+  return Account.authenticate(oldUser, pass, async (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Wrong password!' });
+    }
+    try {
+      return Account.changeUsername(oldUser, newUser, (err2, account2) => {
+        if (err2 || !account2) {
+          if (err2.code === 11000) {
+            return res.status(400).json({ error: 'Username already in use.' });
+          }
+          return res.status(401).json({ error: 'Something went wrong when authorizing' });
+        }
+        req.session.account.username = newUser;
+        return res.status(200).json({ message: 'Username changed successfully' });
+      });
+    } catch (err3) {
+      return res.status(400).json({ error: 'An error occurred' });
+    }
   });
 };
 
