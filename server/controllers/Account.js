@@ -41,6 +41,11 @@ const login = (req, res) => {
   });
 };
 
+// render login with token
+const profilePage = (req, res) => {
+  res.render('profile', { csrfToken: req.csrfToken() });
+};
+
 const signup = async (req, res) => {
   const username = `${req.body.username}`;
   const pass = `${req.body.pass}`;
@@ -87,6 +92,8 @@ const setPremium = (req, res) => {
 // return token
 const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
+const getUserInfo = (req, res) => res.json({ username: req.session.account.username });
+
 // return premium
 const getPremium = (req, res) => Account.premium(req.session.account._id, (err, premium) => {
   if (err) {
@@ -101,10 +108,12 @@ const getPremium = (req, res) => Account.premium(req.session.account._id, (err, 
 module.exports = {
   loginPage,
   login,
+  profilePage,
   logout,
   signup,
   setPremium,
   getToken,
   getPremium,
+  getUserInfo,
 };
 // currently complete

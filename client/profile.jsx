@@ -2,6 +2,15 @@
 const helper = require('./helper.js');
 
 // return "html" of post maker form
+const AccountInfo = (props) => {
+    return (
+        <div id="accountInfo">
+            <h1>{props.username}'s Profile</h1>
+        </div>
+    );
+}
+
+// return "html" of post maker form
 const PostForm = (props) => {
     return (
         <form id="postForm"
@@ -45,42 +54,8 @@ const SetPremium = async (e, newPremiumValue) => {
     const _csrf = e.target.querySelector('#_csrf').value;
     helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf}, LoadAds);
 
-    // re-render premium stuff
-    LoadAds();
-
     return false;
 }
-
-const getRandomAd = () => {
-    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg'];
-    const rand = Math.floor(Math.random() * adList.length);
-    return `${adList[rand]}`;
-}
-
-const Ads = (props) => {
-    if(props.premium === "false") return (
-        <div id="ads" className="adBox">
-            <img src={`${getRandomAd()}`} alt="ad" className="ad" />
-        </div>
-    );
-    return (<div></div>);
-};
-
-const LoadAds = async () => {
-    const response = await fetch('/getToken');
-    const data = await response.json();
-    const response2 = await fetch('/getPremium');
-    const premiumData = await response2.json();
-    ReactDOM.render(
-        <Ads premium={premiumData.premium ? premiumData.premium : "false"} />,
-        document.getElementById('ads')
-    );
-    // re-render premium mode button too
-    ReactDOM.render(
-        <PremiumButton premium={premiumData.premium} csrf={data.csrfToken} />,
-        document.getElementById('premium')
-    );
-};
 
 const PremiumButton = (props) => {
     if(props.premium === "true") return (
@@ -115,7 +90,7 @@ const PostList = (props) => {
     if(props.posts.length === 0) {
         return (
             <div className="PostList">
-                <h3>Looks awfully empty here... Why not post something?</h3>
+                <h3>You haven't posted anything yet!</h3>
             </div>
         );
     }
@@ -123,7 +98,7 @@ const PostList = (props) => {
     const postNodes = props.posts.reverse().map(post => {
         return (
             <div key={post._id} className="post card">
-                <h3> From: {post.username} </h3>
+                <h3> {post.username}: </h3>
                 <p> {post.mainBody} </p>
             </div>
         );
@@ -136,13 +111,13 @@ const PostList = (props) => {
     );
 }
 
-// get posts and send to PostList
-const loadPostsFromServer = async () => {
-    const response = await fetch('/getPosts');
+// get current user's posts and send to PostList
+const loadUserPostsFromServer = async () => {
+    const response = await fetch('/getPosts'); // /getUserPosts
     const data = await response.json();
     ReactDOM.render(
         <PostList posts={data.posts} />,
-        document.getElementById('content')
+        document.getElementById('accountPosts')
     );
 }
 
@@ -152,11 +127,18 @@ const init = async () => {
     const data = await response.json();
     const response2 = await fetch('/getPremium');
     const premiumData = await response2.json();
+    const response3 = await fetch('/getUserInfo');
+    const userData = await response3.json();
+
     // hook up event listeners (windows to buttons)
-    
+    ReactDOM.render(
+        <AccountInfo username={userData.username} csrf={data.csrfToken} />,
+        document.getElementById('accountInfo')
+    );
+
     ReactDOM.render(
         <PostForm csrf={data.csrfToken} />,
-        document.getElementById('makePost')
+        document.getElementById('accountOptions')
     );
 
     // render premium mode button
@@ -166,8 +148,7 @@ const init = async () => {
     );
 
     // load stuff
-    loadPostsFromServer();
-    LoadAds();
+    loadUserPostsFromServer();
 }
 
 window.onload = init;

@@ -28,7 +28,7 @@ const handlePost = (e) => {
 
     // check if data is good
     if(!mainBody) {
-        helper.handleError('Brevity is the soul of wit, but you must enter <i>something</i>.');
+        helper.handleError('Brevity is the soul of wit, but you cannot post an empty box.');
         return false;
     }
 
