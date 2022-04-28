@@ -54,7 +54,7 @@ const SetPremium = async (e, newPremiumValue) => {
 
 // return source of random ad image
 const getRandomAd = () => {
-    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg', '/assets/img/ad3.jpg'];
+    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg', '/assets/img/ad3.jpg', '/assets.img/ad4.jpg'];
     const rand = Math.floor(Math.random() * adList.length);
     return `${adList[rand]}`;
 }
