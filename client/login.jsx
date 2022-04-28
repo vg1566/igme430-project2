@@ -1,7 +1,4 @@
 // This file handles logins with react
-// To-do: 
-// Requires: helper.js
-// exports: 
 
 const helper = require('./helper.js');
 
@@ -65,7 +62,7 @@ const LoginWindow = (props) => {
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <input className="formSubmit" type="submit" value="Log in" />
         </form>
     );
 }
@@ -84,10 +81,9 @@ const SignupWindow = (props) => {
             <input id="user" type="text" name="username" placeholder="username" />
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password" />
-            <label htmlFor="pass2">Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <input className="formSubmit" type="submit" value="Sign up" />
         </form>
     );
 }

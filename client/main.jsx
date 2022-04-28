@@ -1,5 +1,6 @@
 // This file handles the main page with react
 const helper = require('./helper.js');
+const utils = require('./utils.jsx');
 
 // return "html" of post maker form
 const PostForm = (props) => {
@@ -52,12 +53,14 @@ const SetPremium = async (e, newPremiumValue) => {
     return false;
 }
 
+// return source of random ad image
 const getRandomAd = () => {
-    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg'];
+    const adList = ['/assets/img/ad1.jpg', '/assets/img/ad2.jpg', '/assets/img/ad3.jpg'];
     const rand = Math.floor(Math.random() * adList.length);
     return `${adList[rand]}`;
 }
 
+// return ads if user doesn't have premium
 const Ads = (props) => {
     if(props.premium === "false") return (
         <div id="ads" className="adBox col-sm">
@@ -67,6 +70,7 @@ const Ads = (props) => {
     return (<div></div>);
 };
 
+// get data needed for ad rendering and render ads (and premium button)
 const LoadAds = async () => {
     const response = await fetch('/getToken');
     const data = await response.json();
@@ -112,61 +116,7 @@ const PremiumButton = (props) => {
 }
 
 // list all posts passed in props
-const PostList = (props) => {
-  if(props.posts.length === 0) {
-    return (
-      <div className="PostList">
-        <h3>Looks awfully empty here... Why not post something?</h3>
-      </div>
-    );
-  }
-  
-  const postNodes = props.posts.reverse().map(post => {
-    if(post.poster === props._id) {  return(
-      <div key={post._id} className="post card fluid">
-        <div className="section dark row">
-          <h4 className="col-sm"> {post.username}: </h4>
-          <form
-              name="deleteForm"
-              action="/deletePost"
-              onSubmit={(e) => { 
-                  e.preventDefault();
-                  helper.hideError();
-                  helper.sendPost(e.target.action, { 
-                      postId: post._id,
-                      _csrf: props.csrf
-                  }, loadPostsFromServer);
-              }}
-              method="POST"
-              className="deleteForm col-sm"
-          >
-              <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-              <input className="deleteButton" type="submit" value="Delete Post" />
-          </form>
-        </div>
-        <div className="section">
-          <p> {post.mainBody} </p>
-        </div>
-        
-      </div>
-    )} else { return (
-        <div key={post._id} className="post card fluid">
-            <div className="section dark">
-                <h4> {post.username}: </h4>
-            </div>
-            <div className="section">
-                <p> {post.mainBody} </p>
-            </div>
-        </div>
-    )};
-  });
-  
-  return (
-      <div className="postList col-sm">
-          {postNodes}
-      </div>
-  );
-}
+const PostList = (props) => utils.PostList(props, loadPostsFromServer);
 
 // get posts and send to PostList
 const loadPostsFromServer = async () => {
@@ -189,15 +139,10 @@ const init = async () => {
     const response2 = await fetch('/getPremium');
     const premiumData = await response2.json();
     
+    // render post form
     ReactDOM.render(
         <PostForm csrf={data.csrfToken} />,
         document.getElementById('makePost')
-    );
-
-    // render premium mode button
-    ReactDOM.render(
-        <PremiumButton premium={premiumData.premium} csrf={data.csrfToken} />,
-        document.getElementById('premium')
     );
 
     // load stuff

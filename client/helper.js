@@ -1,4 +1,4 @@
-// exports: sendPost,
+// contains helper functions
 
 // update error message text and display it
 const handleError = (message) => {
