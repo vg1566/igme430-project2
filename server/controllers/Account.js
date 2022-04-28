@@ -21,7 +21,7 @@ const logout = (req, res) => {
 
 // authenticate user, set session account, and send to main content
 const login = (req, res) => {
-  const username = `${req.body.username}`;
+  const username = `${req.body.username.toUpperCase()}`;
   const pass = `${req.body.pass}`;
 
   // check for bad data
@@ -37,7 +37,7 @@ const login = (req, res) => {
 
     // set session account and redirect to main page
     req.session.account = Account.toAPI(account);
-    return res.json({ redirect: '/main' });
+    return res.status(200).json({ redirect: '/main' });
   });
 };
 
@@ -52,7 +52,7 @@ const errorPage = (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const username = `${req.body.username}`;
+  const username = `${req.body.username.toUpperCase()}`;
   const pass = `${req.body.pass}`;
   const pass2 = `${req.body.pass2}`;
 
@@ -72,7 +72,7 @@ const signup = async (req, res) => {
     await newAccount.save();
     // set session account and redirect to main page
     req.session.account = Account.toAPI(newAccount);
-    return res.json({ redirect: '/main' });
+    return res.status(200).json({ redirect: '/main' });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Username already in use.' });
@@ -167,9 +167,10 @@ const changeUsername = async (req, res) => {
 };
 
 // return token
-const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
+const getToken = (req, res) => res.status(200).json({ csrfToken: req.csrfToken() });
 
-const getUserInfo = (req, res) => res.json({
+// return user info
+const getUserInfo = (req, res) => res.status(200).json({
   username: req.session.account.username,
   _id: req.session.account._id,
 });
@@ -180,9 +181,9 @@ const getPremium = (req, res) => Account.premium(req.session.account._id, (err, 
     return res.status(401).json({ error: 'Something went wrong when authorizing' });
   }
 
-  // set session account and redirect to main page
+  // set session account
   req.session.account.premium = premium;
-  return res.status(200).json({ premium }); // what to put instead?
+  return res.status(200).json({ premium });
 });
 
 module.exports = {
@@ -199,4 +200,3 @@ module.exports = {
   getPremium,
   getUserInfo,
 };
-// currently complete
