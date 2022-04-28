@@ -7,7 +7,7 @@ const utils = require('./utils.jsx');
 const AccountInfo = (props) => {
     return (
         <div id="accountInfo" className="center-text">
-            <h1>{props.username}'S PROFILE</h1>
+            <h1>{props.username.toUpperCase()}'S PROFILE</h1>
         </div>
     );
 }

@@ -126,9 +126,9 @@ const changePassword = async (req, res) => {
 };
 
 const changeUsername = async (req, res) => {
-  const oldUser = `${req.body.oldUser}`;
+  const oldUser = `${req.body.oldUser.toUpperCase()}`;
   const pass = `${req.body.pass}`;
-  const newUser = `${req.body.newUser}`;
+  const newUser = `${req.body.newUser.toUpperCase()}`;
 
   // check for bad data
   if (!oldUser || !pass || !newUser) {
