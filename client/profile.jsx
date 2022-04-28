@@ -160,47 +160,47 @@ const PostList = (props) => utils.PostList(props, loadUserPostsFromServer);
 
 // get current user's posts and send to PostList
 const loadUserPostsFromServer = async () => {
-    const response = await fetch('/getUserPosts'); 
-    const data = await response.json();
-    const response2 = await fetch('/getUserInfo');
-    const data2 = await response2.json();
-    const response3 = await fetch('/getToken');
-    const data3 = await response3.json();
+    const postResponse = await fetch('/getUserPosts');
+    const postData = await postResponse.json();
+    const userInfoResponse = await fetch('/getUserInfo');
+    const userInfoData = await userInfoResponse.json();
+    const tokenResponse = await fetch('/getToken');
+    const tokenData = await tokenResponse.json();
     ReactDOM.render(
-        <PostList posts={data.posts} _id={data2._id} csrf={data3.csrfToken} />,
+        <PostList posts={postData.posts} _id={userInfoData._id} csrf={tokenData.csrfToken} />,
         document.getElementById('accountPosts')
     );
 }
 
 const init = async () => {
     // get token
-    const response = await fetch('/getToken');
-    const data = await response.json();
-    const response2 = await fetch('/getPremium');
-    const premiumData = await response2.json();
-    const response3 = await fetch('/getUserInfo');
-    const userData = await response3.json();
+    const tokenResponse = await fetch('/getToken');
+    const tokenData = await tokenResponse.json();
+    const premiumResponse = await fetch('/getPremium');
+    const premiumData = await premiumResponse.json();
+    const userInfoResponse = await fetch('/getUserInfo');
+    const userInfoData = await userInfoResponse.json();
 
     ReactDOM.render(
-        <AccountInfo username={userData.username} csrf={data.csrfToken} />,
+        <AccountInfo username={userInfoData.username} csrf={tokenData.csrfToken} />,
         document.getElementById('accountInfo')
     );
 
     // render password change form
     ReactDOM.render(
-        <PasswordChangeForm csrf={data.csrfToken} />,
+        <PasswordChangeForm csrf={tokenData.csrfToken} />,
         document.getElementById('passwordChange')
     );
 
     // render username change form
     ReactDOM.render(
-        <UsernameChangeForm csrf={data.csrfToken} />,
+        <UsernameChangeForm csrf={tokenData.csrfToken} />,
         document.getElementById('usernameChange')
     );
 
     // render premium mode button
     ReactDOM.render(
-        <PremiumButton premium={premiumData.premium} csrf={data.csrfToken} />,
+        <PremiumButton premium={premiumData.premium} csrf={tokenData.csrfToken} />,
         document.getElementById('premium')
     );
 

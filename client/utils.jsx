@@ -59,6 +59,6 @@ const PostList = (props, loadPostCallback) => {
     );
   }
 
-  module.exports = {
-      PostList,
-  }
+module.exports = {
+    PostList,
+}

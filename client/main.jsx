@@ -1,4 +1,5 @@
 // This file handles the main page with react
+
 const helper = require('./helper.js');
 const utils = require('./utils.jsx');
 
@@ -40,15 +41,13 @@ const handlePost = (e) => {
     return false;
 }
 
+// grab premium info from form and sendPost
 const SetPremium = async (e, newPremiumValue) => {
     e.preventDefault();
     helper.hideError();
 
     const _csrf = e.target.querySelector('#_csrf').value;
     helper.sendPost(e.target.action, {premium: newPremiumValue, _csrf: _csrf}, LoadAds);
-
-    // re-render premium stuff
-    LoadAds();
 
     return false;
 }
@@ -87,6 +86,7 @@ const LoadAds = async () => {
     );
 };
 
+// returns appropriate premium button based on premium status
 const PremiumButton = (props) => {
     if(props.premium === "true") return (
         <form id="premiumForm"
@@ -120,14 +120,14 @@ const PostList = (props) => utils.PostList(props, loadPostsFromServer);
 
 // get posts and send to PostList
 const loadPostsFromServer = async () => {
-    const response = await fetch('/getPosts');
-    const data = await response.json();
-    const response2 = await fetch('/getUserInfo');
-    const data2 = await response2.json();
-    const response3 = await fetch('/getToken');
-    const data3 = await response3.json();
+    const postResponse = await fetch('/getPosts');
+    const postData = await postResponse.json();
+    const userInfoResponse = await fetch('/getUserInfo');
+    const userInfoData = await userInfoResponse.json();
+    const tokenResponse = await fetch('/getToken');
+    const tokenData = await tokenResponse.json();
     ReactDOM.render(
-        <PostList posts={data.posts} _id={data2._id} csrf={data3.csrfToken} />,
+        <PostList posts={postData.posts} _id={userInfoData._id} csrf={tokenData.csrfToken} />,
         document.getElementById('content')
     );
 }
@@ -136,8 +136,6 @@ const init = async () => {
     // get token
     const response = await fetch('/getToken');
     const data = await response.json();
-    const response2 = await fetch('/getPremium');
-    const premiumData = await response2.json();
     
     // render post form
     ReactDOM.render(

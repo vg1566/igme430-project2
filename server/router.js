@@ -5,7 +5,7 @@ const mid = require('./middleware');
 
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
-  app.get('/getUserInfo', mid.requiresSecure, controllers.Account.getUserInfo);
+  app.get('/getUserInfo', mid.requiresLogin, controllers.Account.getUserInfo);
   app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
   app.get('/getUserPosts', mid.requiresLogin, controllers.Post.getUserPosts);
   app.post('/deletePost', mid.requiresLogin, controllers.Post.deletePost);
@@ -28,7 +28,7 @@ const router = (app) => {
   app.post('/setPremium', mid.requiresLogin, controllers.Account.setPremium);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  app.get('*', mid.requiresSecure, mid.requiresLogin, controllers.Account.errorPage);
+  app.get('*', mid.requiresLogin, controllers.Account.errorPage);
 };
 
 module.exports = router;

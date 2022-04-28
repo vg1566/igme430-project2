@@ -120,4 +120,3 @@ AccountSchema.statics.premium = async (_id, callback) => {
 
 AccountModel = mongoose.model('Account', AccountSchema);
 module.exports = AccountModel;
-// currently complete

@@ -14,11 +14,13 @@ const handleMessage = (message) => {
   document.getElementById('normalMessageBox').classList.remove('hidden');
 };
 
+// hide error messages (and normal messages)
 const hideError = () => {
     document.getElementById('errorBox').classList.add('hidden');
     if(document.getElementById('normalMessageBox')) document.getElementById('normalMessageBox').classList.add('hidden');
 };
 
+// sends posts through the router and handle what it sends back
 const sendPost = async (url, data, handler) => {
   const response = await fetch(url, {
     method: 'POST',
@@ -47,7 +49,6 @@ const sendPost = async (url, data, handler) => {
       handler(result);
   }
 };
-
 
 module.exports = {
     handleError,

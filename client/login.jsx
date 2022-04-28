@@ -2,6 +2,7 @@
 
 const helper = require('./helper.js');
 
+// process data in form and send to sendPost
 const handleLogin = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -22,6 +23,7 @@ const handleLogin = (e) => {
     return false;
 }
 
+// process data in form and send to sendPost
 const handleSignup = (e) => {
     e.preventDefault();
     helper.hideError();

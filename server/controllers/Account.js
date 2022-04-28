@@ -1,9 +1,3 @@
-// controls actual server communication
-// a la creating/saving new accounts and authenticating old ones and such
-
-// requires: models
-// exports: loginPage, login, logout, signup, setPremium, getToken, getPremium,
-
 const models = require('../models');
 
 const { Account } = models;
@@ -51,6 +45,7 @@ const errorPage = (req, res) => {
   res.render('404', { csrfToken: req.csrfToken() });
 };
 
+// handle signup and send to main content
 const signup = async (req, res) => {
   const username = `${req.body.username.toUpperCase()}`;
   const pass = `${req.body.pass}`;

@@ -77,4 +77,3 @@ app.listen(config.connections.http.port, (err) => {
   if (err) { throw err; }
   console.log(`Listening on port ${config.connections.http.port}`);
 });
-// currently complete
